@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org">
+    <body>
+        <h2>Please enter your verification code</h2>
+        <div th:if="${param.error}">
+            Invalid verification code!
+        </div>
+        <form th:action="@{/code}" method="post" role="form">
+            <input type="text" id="code" name="code" placeholder="Verification code" required="true"/>
+            <button type="submit">OK</button>
+        </form>
+    </body>
+</html>
