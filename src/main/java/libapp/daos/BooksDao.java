@@ -23,12 +23,57 @@ public class BooksDao
         }
     }
 
+    private static List<String> readBookTags(int id) throws SQLException
+    {
+        List<String> tags = new ArrayList<>();
+        PreparedStatement stmt = conn.prepareStatement(
+            "SELECT t.name FROM tags t " +
+            "INNER JOIN bookTags bt ON t.id = bt.tagId " +
+            "INNER JOIN books b ON bt.bookId = b.id " +
+            "WHERE b.id = ?"
+        );
+        stmt.setInt(1, id);
+        ResultSet resultSet = stmt.executeQuery();
+        while (resultSet.next())
+        {
+            String tag = resultSet.getString("name");
+            tags.add(tag);
+        }
+        return tags;
+    }
+
+    private static void writeBookTags(int id, List<String> tags) throws SQLException
+    {
+        for (String tag : tags)
+        {
+            PreparedStatement stmt = conn.prepareStatement("SELECT id FROM tags WHERE name = ?");
+            stmt.setString(1, tag);
+            ResultSet resultSet = stmt.executeQuery();
+            if (resultSet.next())
+            {
+                int tagId = resultSet.getInt("id");
+                PreparedStatement stmt2 = conn.prepareStatement("INSERT INTO bookTags (bookId, tagId) VALUES (?, ?)");
+                stmt2.setInt(1, id);
+                stmt2.setInt(2, tagId);
+                stmt2.execute();
+            }
+        }
+    }
+
+    private static void deleteBookTags(int id) throws SQLException
+    {
+        PreparedStatement stmt = conn.prepareStatement("DELETE FROM bookTags WHERE bookId = ?");
+        stmt.setInt(1, id);
+        stmt.execute();
+    }
+
     public static void create(Book book) throws SQLException
     {
         PreparedStatement stmt = conn.prepareStatement("INSERT INTO books (name, author) VALUES (?, ?)");
         stmt.setString(1, book.name);
         stmt.setString(2, book.author);
         stmt.execute();
+        writeBookTags(book.id, book.tags);
     }
 
     public static Book read(int id) throws SQLException
@@ -40,7 +85,8 @@ public class BooksDao
         {
             String name = resultSet.getString("name");
             String author = resultSet.getString("author");
-            return new Book(id, name, author);
+            List<String> tags = readBookTags(id);
+            return new Book(id, name, author, tags);
         }
         return null;
     }
@@ -55,7 +101,8 @@ public class BooksDao
             int id = resultSet.getInt("id");
             String name = resultSet.getString("name");
             String author = resultSet.getString("author");
-            allBooks.add(new Book(id, name, author));
+            List<String> tags = readBookTags(id);
+            allBooks.add(new Book(id, name, author, tags));
         }
         return allBooks;
     }
@@ -67,6 +114,8 @@ public class BooksDao
         stmt.setString(2, book.author);
         stmt.setInt(3, book.id);
         stmt.execute();
+        deleteBookTags(book.id);
+        writeBookTags(book.id, book.tags);
     }
 
     public static void delete(int id) throws SQLException
@@ -74,5 +123,6 @@ public class BooksDao
         PreparedStatement stmt = conn.prepareStatement("DELETE FROM books WHERE id = ?");
         stmt.setInt(1, id);
         stmt.execute();
+        deleteBookTags(id);
     }
 }

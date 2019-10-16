@@ -9,3 +9,13 @@ CREATE TABLE IF NOT EXISTS books (
     name VARCHAR(255),
     author VARCHAR(255),
 );
+
+CREATE TABLE IF NOT EXISTS tags (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+);
+
+CREATE TABLE IF NOT EXISTS bookTags (
+    bookId INT,
+    tagId INT,
+);

@@ -6,19 +6,37 @@
       layout:decorate="~{layout}">
     <div layout:fragment="page_content" id="page_content">
         <br/>
+        <div th:if="${param.error}">
+            Invalid search string: should be 3 or more characters!
+        </div>
         <div sec:authorize="hasRole('LIBRARIAN')">
             This content is only shown to librarians.
         </div>
+
+        <form th:action="@{/books}" th:object="${filter}" method="post">
+            <span th:each="checkboxValue, iterStat : ${allTags}">
+                    <input type="checkbox" th:field="*{selectedTags}" th:value="${checkboxValue}"/>
+                    <label th:for="${#ids.prev('selectedTags')}" th:text="${checkboxValue}"></label>
+                    <br th:if="(${iterStat.index} + 1) % 4 == 0 and !${iterStat.last}">
+            </span>
+            <br>
+            <input type="text" placeholder="Search string" th:field="*{searchString}" />
+            <button type="submit">OK</button>
+        </form>
         <table>
             <tr>
                 <th>ID</th>
                 <th>Name</th>
                 <th>Author</th>
+                <th>Tags</th>
             </tr>
-            <tr th:each="book: ${books}">
-                <td th:text="${book.id}" />
-                <td th:text="${book.name}" />
-                <td th:text="${book.author}" />
+            <tr th:each="book : ${books}">
+                <td th:text="${book.id}"></td>
+                <td th:text="${book.name}"></td>
+                <td th:text="${book.author}"></td>
+                <td>
+                    <span th:each="tag, iterStat : ${book.tags}" th:text="!${iterStat.last} ? ${tag} + ', ' : ${tag}"></span>
+                </td>
             </tr>
         </table>
     </div>
