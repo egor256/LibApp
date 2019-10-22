@@ -4,13 +4,13 @@ INSERT INTO users SELECT * FROM (
 ) x WHERE NOT EXISTS(SELECT * FROM users);
 
 INSERT INTO books SELECT * FROM (
-    SELECT 1, 'Book1', 'Author1' UNION
-    SELECT 2, 'Book2', 'Author2' UNION
-    SELECT 3, 'Book3', 'Author3' UNION
-    SELECT 4, 'Book4', 'Author4' UNION
-    SELECT 5, 'Book5', 'Author5' UNION
-    SELECT 6, 'Book6', 'Author6' UNION
-    SELECT 7, 'Book7', 'Author7'
+    SELECT 1, 'Book1', 'Author1', 7 UNION
+    SELECT 2, 'Book2', 'Author2', 3 UNION
+    SELECT 3, 'Book3', 'Author3', 8 UNION
+    SELECT 4, 'Book4', 'Author4', 4 UNION
+    SELECT 5, 'Book5', 'Author5', 1 UNION
+    SELECT 6, 'Book6', 'Author6', 0 UNION
+    SELECT 7, 'Book7', 'Author7', 2
 ) x WHERE NOT EXISTS(SELECT * FROM books);
 
 INSERT INTO tags SELECT * FROM (
@@ -36,3 +36,8 @@ INSERT INTO bookTags SELECT * FROM (
     SELECT 6 AS bookId, 7 AS tagId UNION
     SELECT 7 AS bookId, 4 AS tagId
 ) x WHERE NOT EXISTS(SELECT * FROM bookTags);
+
+INSERT INTO bookings SELECT * FROM (
+    SELECT 1, 3, 'egor', 0 UNION
+    SELECT 2, 4, 'egor', 1
+) x WHERE NOT EXISTS(SELECT * FROM bookings);

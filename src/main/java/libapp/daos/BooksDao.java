@@ -69,9 +69,10 @@ public class BooksDao
 
     public static void create(Book book) throws SQLException
     {
-        PreparedStatement stmt = conn.prepareStatement("INSERT INTO books (name, author) VALUES (?, ?)");
+        PreparedStatement stmt = conn.prepareStatement("INSERT INTO books (name, author, quantity) VALUES (?, ?, ?)");
         stmt.setString(1, book.name);
         stmt.setString(2, book.author);
+        stmt.setInt(3, book.quantity);
         stmt.execute();
         writeBookTags(book.id, book.tags);
     }
@@ -86,7 +87,8 @@ public class BooksDao
             String name = resultSet.getString("name");
             String author = resultSet.getString("author");
             List<String> tags = readBookTags(id);
-            return new Book(id, name, author, tags);
+            int quantity = resultSet.getInt("quantity");
+            return new Book(id, name, author, tags, quantity);
         }
         return null;
     }
@@ -102,17 +104,19 @@ public class BooksDao
             String name = resultSet.getString("name");
             String author = resultSet.getString("author");
             List<String> tags = readBookTags(id);
-            allBooks.add(new Book(id, name, author, tags));
+            int quantity = resultSet.getInt("quantity");
+            allBooks.add(new Book(id, name, author, tags, quantity));
         }
         return allBooks;
     }
 
     public static void update(Book book) throws SQLException
     {
-        PreparedStatement stmt = conn.prepareStatement("UPDATE books SET name = ?, author = ? WHERE id = ?");
+        PreparedStatement stmt = conn.prepareStatement("UPDATE books SET name = ?, author = ?, quantity = ?, WHERE id = ?");
         stmt.setString(1, book.name);
         stmt.setString(2, book.author);
-        stmt.setInt(3, book.id);
+        stmt.setInt(3, book.quantity);
+        stmt.setInt(4, book.id);
         stmt.execute();
         deleteBookTags(book.id);
         writeBookTags(book.id, book.tags);
@@ -124,5 +128,14 @@ public class BooksDao
         stmt.setInt(1, id);
         stmt.execute();
         deleteBookTags(id);
+    }
+
+    // Returns true if decrement was successful (quantity > 0)
+    public static boolean decrementQuantity(int id) throws SQLException
+    {
+        PreparedStatement stmt = conn.prepareStatement("UPDATE books SET quantity = quantity - 1 WHERE id = ? AND quantity > 0");
+        stmt.setInt(1, id);
+        int rowsAffected = stmt.executeUpdate();
+        return rowsAffected > 0;
     }
 }

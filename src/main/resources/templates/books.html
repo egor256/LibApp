@@ -5,14 +5,12 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="~{layout}">
     <div layout:fragment="page_content" id="page_content">
-        <br/>
-        <div th:if="${param.error}">
+        <div class="error" th:if="${param.error}">
             Invalid search string: should be 3 or more characters!
         </div>
         <div sec:authorize="hasRole('LIBRARIAN')">
-            This content is only shown to librarians.
+            <a th:href="@{/books/add}">Add new book</a>
         </div>
-
         <form th:action="@{/books}" th:object="${filter}" method="post">
             <span th:each="checkboxValue, iterStat : ${allTags}">
                     <input type="checkbox" th:field="*{selectedTags}" th:value="${checkboxValue}"/>
@@ -29,6 +27,9 @@
                 <th>Name</th>
                 <th>Author</th>
                 <th>Tags</th>
+                <th>Quantity</th>
+                <th></th>
+                <th sec:authorize="hasRole('LIBRARIAN')"></th>
             </tr>
             <tr th:each="book : ${books}">
                 <td th:text="${book.id}"></td>
@@ -37,6 +38,10 @@
                 <td>
                     <span th:each="tag, iterStat : ${book.tags}" th:text="!${iterStat.last} ? ${tag} + ', ' : ${tag}"></span>
                 </td>
+                <td th:text="${book.quantity}"></td>
+                <td sec:authorize="!hasRole('LIBRARIAN')"><span th:if="${book.quantity} > 0"><a th:href="@{/order(bookId=${book.id})}">Order</a></span></td>
+                <td sec:authorize="hasRole('LIBRARIAN')"><a th:href="@{/books/update(bookId=${book.id})}">Update</a></td>
+                <td sec:authorize="hasRole('LIBRARIAN')"><a th:href="@{/books/delete(bookId=${book.id})}">Delete</a></td>
             </tr>
         </table>
     </div>

@@ -16,6 +16,8 @@ import java.util.List;
 @RequestMapping("/code")
 public class CodeController
 {
+    private static final boolean DEBUG = true;
+
     private void grantAuthority()
     {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -49,10 +51,17 @@ public class CodeController
     public String code(String code)
     {
         String view = "redirect:/code?error";
-        if (code.equals("555"))
+        if (DEBUG)
         {
-            grantAuthority();
-            view = "redirect:/home";
+            if (code.equals("555"))
+            {
+                grantAuthority();
+                view = "redirect:/home";
+            }
+        }
+        else
+        {
+            // TODO: send email with random code
         }
         return view;
     }

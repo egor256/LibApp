@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS books (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255),
     author VARCHAR(255),
+    quantity INT,
 );
 
 CREATE TABLE IF NOT EXISTS tags (
@@ -18,4 +19,11 @@ CREATE TABLE IF NOT EXISTS tags (
 CREATE TABLE IF NOT EXISTS bookTags (
     bookId INT,
     tagId INT,
+);
+
+CREATE TABLE IF NOT EXISTS bookings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    bookId INT,
+    principal VARCHAR(255),
+    status INT,
 );

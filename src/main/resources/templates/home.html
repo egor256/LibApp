@@ -5,5 +5,23 @@
       layout:decorate="~{layout}">
     <div layout:fragment="page_content" id="page_content">
         <h2>Welcome to your homepage!</h2>
+        <div th:if="${bookings.isEmpty()}">
+            You don't have any bookings yet.
+        </div>
+        <div th:unless="${bookings.isEmpty()}">
+            Your bookings:
+            <table>
+                <tr>
+                    <td>ID</td>
+                    <td>Book ID</td>
+                    <td>Status</td>
+                </tr>
+                <tr th:each="booking : ${bookings}">
+                    <td th:text="${booking.id}"></td>
+                    <td th:text="${booking.bookId}"></td>
+                    <td th:text="${booking.status}"></td>
+                </tr>
+            </table>
+        </div>
     </div>
 </html>
