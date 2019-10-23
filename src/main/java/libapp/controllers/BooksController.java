@@ -6,6 +6,7 @@ import libapp.daos.TagsDao;
 import libapp.models.Book;
 import libapp.models.BookFilter;
 import libapp.models.Booking;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +35,7 @@ public class BooksController
         return string.toLowerCase().trim().contains(searchString.toLowerCase().trim());
     }
 
+    @Secured({"ROLE_USER", "ROLE_LIBRARIAN", "ROLE_ADMIN"})
     @PostMapping("/books")
     public String books(@ModelAttribute("filter") BookFilter filter, Model model) throws SQLException
     {
@@ -40,7 +43,7 @@ public class BooksController
 
         List<String> selectedTags = Arrays.asList(filter.getSelectedTags());
         books = books.stream()
-                     .filter(book -> !Collections.disjoint(selectedTags, book.tags))
+                     .filter(book -> !Collections.disjoint(selectedTags, book.getTags()))
                      .collect(Collectors.toList());
 
         String searchString = filter.getSearchString();
@@ -52,7 +55,7 @@ public class BooksController
             }
 
             books = books.stream()
-                    .filter(book -> matches(book.name, searchString) || matches(book.author, searchString))
+                    .filter(book -> matches(book.getName(), searchString) || matches(book.getAuthor(), searchString))
                     .collect(Collectors.toList());
         }
         model.addAttribute("books", books);
@@ -60,6 +63,7 @@ public class BooksController
         return "books";
     }
 
+    @Secured({"ROLE_USER", "ROLE_LIBRARIAN", "ROLE_ADMIN"})
     @GetMapping("/books")
     public String books(Model model) throws SQLException
     {
@@ -73,7 +77,7 @@ public class BooksController
         return "books";
     }
 
-    //TODO: add access levels
+    @Secured({"ROLE_LIBRARIAN", "ROLE_ADMIN"})
     @GetMapping("/books/delete")
     public String delete(int bookId) throws SQLException
     {
@@ -81,13 +85,45 @@ public class BooksController
         return "redirect:/books"; //TODO: message
     }
 
-    @GetMapping("/books/update")
-    public String update(int bookId) throws SQLException
+    @Secured({"ROLE_LIBRARIAN", "ROLE_ADMIN"})
+    @PostMapping("/books/update")
+    public String update(@ModelAttribute("book") Book book) throws SQLException
     {
+        BooksDao.update(book);
+        return "redirect:/books";
+    }
+
+    @Secured({"ROLE_LIBRARIAN", "ROLE_ADMIN"})
+    @GetMapping("/books/update")
+    public String update(int bookId, Model model) throws SQLException
+    {
+        Book book = BooksDao.read(bookId);
+        List<String> tags = TagsDao.getAllTags();
+        model.addAttribute("allTags", tags);
+        model.addAttribute("book", book);
         return "book_update";
     }
 
-    //TODO: add access levels
+    @Secured({"ROLE_LIBRARIAN", "ROLE_ADMIN"})
+    @PostMapping("/books/add")
+    public String add(@ModelAttribute("book") Book book) throws SQLException
+    {
+        BooksDao.create(book);
+        return "redirect:/books";
+    }
+
+    @Secured({"ROLE_LIBRARIAN", "ROLE_ADMIN"})
+    @GetMapping("/books/add")
+    public String add(Model model) throws SQLException
+    {
+        Book book = new Book(-1, "", "", new ArrayList<>(), 0);
+        List<String> tags = TagsDao.getAllTags();
+        model.addAttribute("allTags", tags);
+        model.addAttribute("book", book);
+        return "book_add";
+    }
+
+    @Secured({"ROLE_USER", "ROLE_LIBRARIAN", "ROLE_ADMIN"})
     @GetMapping("/order")
     public String order(int bookId) throws SQLException
     {

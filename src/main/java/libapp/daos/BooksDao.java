@@ -69,12 +69,22 @@ public class BooksDao
 
     public static void create(Book book) throws SQLException
     {
-        PreparedStatement stmt = conn.prepareStatement("INSERT INTO books (name, author, quantity) VALUES (?, ?, ?)");
-        stmt.setString(1, book.name);
-        stmt.setString(2, book.author);
-        stmt.setInt(3, book.quantity);
-        stmt.execute();
-        writeBookTags(book.id, book.tags);
+        PreparedStatement stmt = conn.prepareStatement("INSERT INTO books (name, author, quantity) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+        stmt.setString(1, book.getName());
+        stmt.setString(2, book.getAuthor());
+        stmt.setInt(3, book.getQuantity());
+        stmt.executeUpdate();
+        ResultSet generatedKeys = stmt.getGeneratedKeys();
+        int generatedBookId;
+        if (generatedKeys.next())
+        {
+            generatedBookId = generatedKeys.getInt(1);
+        }
+        else
+        {
+            throw new RuntimeException("Failed to generate id");
+        }
+        writeBookTags(generatedBookId, book.getTags());
     }
 
     public static Book read(int id) throws SQLException
@@ -112,14 +122,14 @@ public class BooksDao
 
     public static void update(Book book) throws SQLException
     {
-        PreparedStatement stmt = conn.prepareStatement("UPDATE books SET name = ?, author = ?, quantity = ?, WHERE id = ?");
-        stmt.setString(1, book.name);
-        stmt.setString(2, book.author);
-        stmt.setInt(3, book.quantity);
-        stmt.setInt(4, book.id);
+        PreparedStatement stmt = conn.prepareStatement("UPDATE books SET name = ?, author = ?, quantity = ? WHERE id = ?");
+        stmt.setString(1, book.getName());
+        stmt.setString(2, book.getAuthor());
+        stmt.setInt(3, book.getQuantity());
+        stmt.setInt(4, book.getId());
         stmt.execute();
-        deleteBookTags(book.id);
-        writeBookTags(book.id, book.tags);
+        deleteBookTags(book.getId());
+        writeBookTags(book.getId(), book.getTags());
     }
 
     public static void delete(int id) throws SQLException

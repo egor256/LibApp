@@ -29,9 +29,9 @@ public class BookingsDao
     public static void create(Booking booking) throws SQLException
     {
         PreparedStatement stmt = conn.prepareStatement("INSERT INTO bookings (bookId, principal, status) VALUES (?, ?, ?)");
-        stmt.setInt(1, booking.bookId);
-        stmt.setString(2, booking.username);
-        stmt.setInt(3, booking.status.ordinal());
+        stmt.setInt(1, booking.getBookId());
+        stmt.setString(2, booking.getUsername());
+        stmt.setInt(3, booking.getStatus().ordinal());
         stmt.execute();
     }
 
