@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layout}">
+    <div layout:fragment="page_content" id="page_content">
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Book</th>
+                <th>Author</th>
+                <th>Status</th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr th:each="booking : ${bookingsViewModels}">
+                <td th:text="${booking.bookingId}"></td>
+                <td th:text="${booking.username}"></td>
+                <td th:text="${booking.bookName}"></td>
+                <td th:text="${booking.bookAuthor}"></td>
+                <td th:text="${booking.status}"></td>
+                <td><a th:href="@{/bookings/update(bookingId=${booking.bookingId})}">Update</a></td>
+                <td><a th:href="@{/bookings/delete(bookingId=${booking.bookingId})}">Delete</a></td>
+            </tr>
+        </table>
+    </div>
+</html>

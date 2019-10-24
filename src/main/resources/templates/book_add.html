@@ -11,7 +11,7 @@
             <br th:if="(${iterStat.index} + 1) % 4 == 0 and !${iterStat.last}">
         </span>
         <br>
-        <input type="hidden" placeholder="id" th:field="*{id}"/>
+        <input type="hidden" th:field="*{id}"/>
         <input type="text" placeholder="Name" th:field="*{name}"/>
         <br>
         <input type="text" placeholder="Author" th:field="*{author}"/>

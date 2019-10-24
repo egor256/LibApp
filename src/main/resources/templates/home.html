@@ -5,20 +5,22 @@
       layout:decorate="~{layout}">
     <div layout:fragment="page_content" id="page_content">
         <h2>Welcome to your homepage!</h2>
-        <div th:if="${bookings.isEmpty()}">
+        <div th:if="${bookingsViewModels.isEmpty()}">
             You don't have any bookings yet.
         </div>
-        <div th:unless="${bookings.isEmpty()}">
+        <div th:unless="${bookingsViewModels.isEmpty()}">
             Your bookings:
             <table>
                 <tr>
-                    <td>ID</td>
-                    <td>Book ID</td>
-                    <td>Status</td>
+                    <th>ID</th>
+                    <th>Book</th>
+                    <th>Author</th>
+                    <th>Status</th>
                 </tr>
-                <tr th:each="booking : ${bookings}">
-                    <td th:text="${booking.id}"></td>
-                    <td th:text="${booking.bookId}"></td>
+                <tr th:each="booking : ${bookingsViewModels}">
+                    <td th:text="${booking.bookingId}"></td>
+                    <td th:text="${booking.bookName}"></td>
+                    <td th:text="${booking.bookAuthor}"></td>
                     <td th:text="${booking.status}"></td>
                 </tr>
             </table>

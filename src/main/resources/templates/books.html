@@ -40,7 +40,7 @@
                 </td>
                 <td th:text="${book.quantity}"></td>
                 <td sec:authorize="!hasRole('LIBRARIAN')"><span th:if="${book.quantity} > 0"><a th:href="@{/order(bookId=${book.id})}">Order</a></span></td>
-                <td sec:authorize="hasRole('LIBRARIAN')"><a th:href="@{/books/update(bookId=${book.id})}">Update</a></td>
+                <td sec:authorize="hasRole('LIBRARIAN')"><a th:href="@{/books/update(bookId=${book.id})}">Edit</a></td>
                 <td sec:authorize="hasRole('LIBRARIAN')"><a th:href="@{/books/delete(bookId=${book.id})}">Delete</a></td>
             </tr>
         </table>

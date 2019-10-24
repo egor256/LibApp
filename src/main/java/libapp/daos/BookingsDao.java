@@ -35,6 +35,38 @@ public class BookingsDao
         stmt.execute();
     }
 
+    public static void delete(int id) throws SQLException
+    {
+        PreparedStatement stmt = conn.prepareStatement("DELETE FROM bookings WHERE id = ?");
+        stmt.setInt(1, id);
+        stmt.execute();
+    }
+
+    public static Booking read(int id) throws SQLException
+    {
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM bookings WHERE id = ?");
+        stmt.setInt(1, id);
+        ResultSet resultSet = stmt.executeQuery();
+        if (resultSet.next())
+        {
+            int bookId = resultSet.getInt("bookId");
+            String username = resultSet.getString("principal");
+            int status = resultSet.getInt("status");
+            return new Booking(id, bookId, username, Booking.Status.values()[status]);
+        }
+        return null;
+    }
+
+    public static void update(Booking booking) throws SQLException
+    {
+        PreparedStatement stmt = conn.prepareStatement("UPDATE bookings SET bookId = ?, principal = ?, status = ? WHERE id = ?");
+        stmt.setInt(1, booking.getBookId());
+        stmt.setString(2, booking.getUsername());
+        stmt.setInt(3, booking.getStatus().ordinal());
+        stmt.setInt(4, booking.getId());
+        stmt.execute();
+    }
+
     public static List<Booking> readUserBookings(String username) throws SQLException
     {
         List<Booking> bookings = new ArrayList<>();
@@ -45,6 +77,22 @@ public class BookingsDao
         {
             int id = resultSet.getInt("id");
             int bookId = resultSet.getInt("bookId");
+            int status = resultSet.getInt("status");
+            bookings.add(new Booking(id, bookId, username, Booking.Status.values()[status]));
+        }
+        return bookings;
+    }
+
+    public static List<Booking> readAllBookings() throws SQLException
+    {
+        List<Booking> bookings = new ArrayList<>();
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM bookings");
+        ResultSet resultSet = stmt.executeQuery();
+        while (resultSet.next())
+        {
+            int id = resultSet.getInt("id");
+            int bookId = resultSet.getInt("bookId");
+            String username = resultSet.getString("principal");
             int status = resultSet.getInt("status");
             bookings.add(new Booking(id, bookId, username, Booking.Status.values()[status]));
         }

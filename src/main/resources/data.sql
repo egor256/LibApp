@@ -38,6 +38,6 @@ INSERT INTO bookTags SELECT * FROM (
 ) x WHERE NOT EXISTS(SELECT * FROM bookTags);
 
 INSERT INTO bookings SELECT * FROM (
-    SELECT 1, 3, 'egor', 0 UNION
-    SELECT 2, 4, 'egor', 1
+    SELECT 1 AS id, 3 AS bookId, 'egor' AS principal, 0 AS status UNION
+    SELECT 2 AS id, 4 AS bookId, 'egor' AS principal, 1 AS status
 ) x WHERE NOT EXISTS(SELECT * FROM bookings);
