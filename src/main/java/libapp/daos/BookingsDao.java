@@ -35,11 +35,12 @@ public class BookingsDao
         stmt.execute();
     }
 
-    public static void delete(int id) throws SQLException
+    public static boolean delete(int id) throws SQLException
     {
         PreparedStatement stmt = conn.prepareStatement("DELETE FROM bookings WHERE id = ?");
         stmt.setInt(1, id);
-        stmt.execute();
+        int rowsAffected = stmt.executeUpdate();
+        return rowsAffected > 0;
     }
 
     public static Booking read(int id) throws SQLException

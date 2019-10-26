@@ -2,7 +2,6 @@ package libapp.controllers;
 
 import libapp.daos.BookingsDao;
 import libapp.daos.BooksDao;
-import libapp.daos.TagsDao;
 import libapp.models.Book;
 import libapp.models.Booking;
 import libapp.models.BookingViewModel;
@@ -46,7 +45,12 @@ public class BookingsController
     @GetMapping("/bookings/delete")
     public String delete(int bookingId) throws SQLException
     {
-        BookingsDao.delete(bookingId);
+        Booking booking = BookingsDao.read(bookingId);
+        int bookId = booking.getBookId();
+        if (BookingsDao.delete(bookingId))
+        {
+            BooksDao.incrementQuantity(bookId);
+        }
         return "redirect:/bookings"; //TODO: message
     }
 

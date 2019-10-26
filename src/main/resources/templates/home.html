@@ -22,6 +22,7 @@
                     <td th:text="${booking.bookName}"></td>
                     <td th:text="${booking.bookAuthor}"></td>
                     <td th:text="${booking.status}"></td>
+                    <td th:if="${booking.status.name() == 'Ordered'}"><a th:href="@{/home/cancel(bookingId=${booking.bookingId})}">Cancel</a></td>
                 </tr>
             </table>
         </div>

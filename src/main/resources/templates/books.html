@@ -28,8 +28,6 @@
                 <th>Author</th>
                 <th>Tags</th>
                 <th>Quantity</th>
-                <th></th>
-                <th sec:authorize="hasRole('LIBRARIAN')"></th>
             </tr>
             <tr th:each="book : ${books}">
                 <td th:text="${book.id}"></td>

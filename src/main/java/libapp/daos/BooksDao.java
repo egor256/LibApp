@@ -148,4 +148,11 @@ public class BooksDao
         int rowsAffected = stmt.executeUpdate();
         return rowsAffected > 0;
     }
+
+    public static void incrementQuantity(int id) throws SQLException
+    {
+        PreparedStatement stmt = conn.prepareStatement("UPDATE books SET quantity = quantity + 1 WHERE id = ? AND quantity > 0");
+        stmt.setInt(1, id);
+        stmt.execute();
+    }
 }
