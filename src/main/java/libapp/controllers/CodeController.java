@@ -1,22 +1,30 @@
 package libapp.controllers;
 
+import libapp.Application;
+import libapp.EmailSender;
+import libapp.daos.LibAppUsersDao;
+import libapp.models.LibAppUser;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Controller
 @RequestMapping("/code")
 public class CodeController
 {
-    private static final boolean DEBUG = true;
+    private int verificationNumber;
 
     private void grantAuthority()
     {
@@ -42,8 +50,25 @@ public class CodeController
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String code()
+    public String code(@RequestParam(value = "error", required = false) String error, Model model) throws SQLException
     {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        LibAppUser libAppUser = LibAppUsersDao.read(username);
+        if (error == null && !Application.DEBUG)
+        {
+            new Thread(() ->
+            {
+                Random random = new Random();
+                int min = 10000;
+                int max = 99999;
+                verificationNumber = random.nextInt(max - min + 1) + min;
+                String subject = "Verification code";
+                String message = String.format("Your verification code is: %d", verificationNumber);
+                EmailSender.sendEmail(libAppUser.getEmail(), subject, message);
+            }).start();
+        }
+        model.addAttribute("email", libAppUser.getEmail());
         return "code";
     }
 
@@ -51,17 +76,11 @@ public class CodeController
     public String code(String code)
     {
         String view = "redirect:/code?error";
-        if (DEBUG)
+        String expectedCode = Application.DEBUG ? "555" : String.valueOf(verificationNumber);
+        if (code.equals(expectedCode))
         {
-            if (code.equals("555"))
-            {
-                grantAuthority();
-                view = "redirect:/home";
-            }
-        }
-        else
-        {
-            // TODO: send email with random code
+            grantAuthority();
+            view = "redirect:/home";
         }
         return view;
     }

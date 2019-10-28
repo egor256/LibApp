@@ -12,6 +12,8 @@ import java.sql.SQLException;
 @SpringBootApplication
 public class Application
 {
+    public static final boolean DEBUG = true;
+
     @Bean
     public static DataSource getDataSource()
     {
@@ -29,6 +31,10 @@ public class Application
 
     public static void main(String[] args) throws Throwable
     {
+        if (!Application.DEBUG && EmailSender.getSender().getPassword() == null)
+        {
+            throw new RuntimeException("Please enter mail sender password in EmailSender.java!");
+        }
         SpringApplication.run(Application.class, args);
     }
 }
