@@ -1,6 +1,6 @@
 INSERT INTO users SELECT * FROM (
     SELECT 'egor', '0000', 'PRE_AUTH_USER', 'library.app.2019.user1@hotmail.com' UNION
-    SELECT 'tom', '0000', 'PRE_AUTH_LIBRARIAN', 'library.app.2019.user1@hotmail.com'
+    SELECT 'tom', '0000', 'PRE_AUTH_LIBRARIAN', 'library.app.2019.librarian1@hotmail.com'
 ) x WHERE NOT EXISTS(SELECT * FROM users);
 
 INSERT INTO books SELECT * FROM (
