@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org">
+    <body>
+        <h2>Register new account</h2>
+        <div class="error" th:if="${param.emailerror}">
+            This email is invalid. Please try again.
+        </div>
+        <div class="error" th:if="${param.error}">
+            This username/email is occupied. Please try again.
+        </div>
+        <div class="error" th:if="${param.pwderror}">
+            Passwords do not match. Please try again.
+        </div>
+        <form th:action="@{/signup}" th:object="${registrationInfo}" method="post">
+            <div><input type="text" placeholder="Username" th:field="*{username}"/></div>
+            <div><input type="text" placeholder="Email" th:field="*{email}"/></div>
+            <div><input type="password" placeholder="Password" th:field="*{password}"/></div>
+            <div><input type="password" placeholder="Repeat password" th:field="*{repeatPassword}"/></div>
+            <div><input type="submit" value="OK"/></div>
+        </form>
+    </body>
+</html>

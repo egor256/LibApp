@@ -69,6 +69,7 @@ public class CodeController
             }).start();
         }
         model.addAttribute("email", libAppUser.getEmail());
+        model.addAttribute("debug", Application.DEBUG);
         return "code";
     }
 

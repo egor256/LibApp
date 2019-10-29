@@ -3,8 +3,9 @@
       xmlns:th="https://www.thymeleaf.org">
     <body>
         <h2>Please enter your verification code</h2>
-        <h4 th:text="${'Verification code was sent to ' + email}"></h4>
-        <div th:if="${param.error}">
+        <h4 th:unless="${debug}" th:text="${'Verification code was sent to ' + email}"></h4>
+        <h4 th:if="${debug}" th:text="'This is DEBUG version. Verification code is 555.'"></h4>
+        <div class="error" th:if="${param.error}">
             Invalid verification code!
         </div>
         <form th:action="@{/code}" method="post" role="form">

@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS users (
-    principal VARCHAR(255),
+    principal VARCHAR(255) UNIQUE,
     credentials VARCHAR(255),
     role VARCHAR(255),
-    email VARCHAR(255),
+    email VARCHAR(255) UNIQUE,
 );
 
 CREATE TABLE IF NOT EXISTS books (
