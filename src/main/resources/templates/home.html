@@ -3,6 +3,14 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="jumbotron text-center">
     <div layout:fragment="page_content" id="page_content">
         <h2>Welcome to your homepage!</h2>
         <div th:if="${bookingsViewModels.isEmpty()}">
@@ -10,21 +18,27 @@
         </div>
         <div th:unless="${bookingsViewModels.isEmpty()}">
             Your bookings:
-            <table>
-                <tr>
-                    <th>ID</th>
-                    <th>Book</th>
-                    <th>Author</th>
-                    <th>Status</th>
-                </tr>
-                <tr th:each="booking : ${bookingsViewModels}">
-                    <td th:text="${booking.bookingId}"></td>
-                    <td th:text="${booking.bookName}"></td>
-                    <td th:text="${booking.bookAuthor}"></td>
-                    <td th:text="${booking.status}"></td>
-                    <td th:if="${booking.status.name() == 'Ordered'}"><a th:href="@{/home/cancel(bookingId=${booking.bookingId})}">Cancel</a></td>
-                </tr>
-            </table>
+            <div class="container">
+                <table class="table table-hover">
+                    <tr>
+                        <th>ID</th>
+                        <th>Book</th>
+                        <th>Author</th>
+                        <th>Status</th>
+                    </tr>
+                    <tr th:each="booking : ${bookingsViewModels}">
+                        <td th:text="${booking.bookingId}"></td>
+                        <td th:text="${booking.bookName}"></td>
+                        <td th:text="${booking.bookAuthor}"></td>
+                        <td th:text="${booking.status}"></td>
+                        <td th:if="${booking.status.name() == 'Ordered'}"><a th:href="@{/home/cancel(bookingId=${booking.bookingId})}">Cancel</a></td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
+</div>
+</body>
+
 </html>
+
