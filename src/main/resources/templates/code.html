@@ -19,10 +19,14 @@
         </div>
         <br>
         <div class="container text-center" style="margin:auto; width:30%; text-align:center;">
-        <form th:action="@{/code}" method="post" role="form" class="form-inline ">
+        <form th:action="@{/code}" method="post" role="form" >
 
-            <input type="text" id="code" name="code" placeholder="Verification code" required="true" class="form-control"/>
-            <button type="submit" class="btn btn-success">OK</button>
+            <div class="row d-flex justify-content-center">
+                <table>
+                    <tr>
+                        <td><input type="text" id="code" name="code" placeholder="Verification code" required="true" class="form-control"/></td>
+                        <td><button type="submit" class="btn btn-success">OK</button></td>
+                    </tr></table></div>
         </form>
         </div>
     </div>

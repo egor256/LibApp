@@ -20,7 +20,7 @@
         <div sec:authorize="hasRole('LIBRARIAN')">
             <a th:href="@{/books/add}">Add new book</a>
         </div>
-        <form th:action="@{/books}" th:object="${filter}" method="post" class="form-inline ">
+        <form th:action="@{/books}" th:object="${filter}" method="post" >
             <div class="container text-center" style="margin:auto; width:30%; text-align:center;">
             <span th:each="checkboxValue, iterStat : ${allTags}">
                     <input type="checkbox" th:field="*{selectedTags}" th:value="${checkboxValue}"/>
@@ -28,9 +28,16 @@
                     <br th:if="(${iterStat.index} + 1) % 4 == 0 and !${iterStat.last}">
             </span>
             <br>
+                <div class="row d-flex justify-content-center">
+                    <table>
+                        <tr>
+                            <td width="70%"> <input type="text" placeholder="Search string" th:field="*{searchString}" class="form-control"/></td>
+                            <td width="30%"><button type="submit" class="btn btn-success">OK</button></td>
+                        </tr>
 
-            <input type="text" placeholder="Search string" th:field="*{searchString}" class="form-control"/>
-                <button type="submit" class="btn btn-success">OK</button>
+                    </table></div>
+            <!--<input type="text" placeholder="Search string" th:field="*{searchString}" class="form-control"/>
+                <button type="submit" class="btn btn-success">OK</button>-->
             </div>
         </form>
         <br>
