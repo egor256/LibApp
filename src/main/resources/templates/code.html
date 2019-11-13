@@ -1,16 +1,30 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+
     <body>
+    <div class="jumbotron text-center" >
         <h2>Please enter your verification code</h2>
         <h4 th:unless="${debug}" th:text="${'Verification code was sent to ' + email}"></h4>
         <h4 th:if="${debug}" th:text="'This is DEBUG version. Verification code is 555.'"></h4>
-        <div class="error" th:if="${param.error}">
+        <div class="error" th:if="${param.error}" >
             Invalid verification code!
         </div>
-        <form th:action="@{/code}" method="post" role="form">
-            <input type="text" id="code" name="code" placeholder="Verification code" required="true"/>
-            <button type="submit">OK</button>
+        <br>
+        <div class="container text-center" style="margin:auto; width:30%; text-align:center;">
+        <form th:action="@{/code}" method="post" role="form" class="form-inline ">
+
+            <input type="text" id="code" name="code" placeholder="Verification code" required="true" class="form-control"/>
+            <button type="submit" class="btn btn-success">OK</button>
         </form>
+        </div>
+    </div>
     </body>
 </html>

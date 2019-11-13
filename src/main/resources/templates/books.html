@@ -4,6 +4,15 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="~{layout}">
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="jumbotron text-center" >
     <div layout:fragment="page_content" id="page_content">
         <div class="error" th:if="${param.error}">
             Invalid search string: should be 3 or more characters!
@@ -11,23 +20,31 @@
         <div sec:authorize="hasRole('LIBRARIAN')">
             <a th:href="@{/books/add}">Add new book</a>
         </div>
-        <form th:action="@{/books}" th:object="${filter}" method="post">
+        <form th:action="@{/books}" th:object="${filter}" method="post" class="form-inline ">
+            <div class="container text-center" style="margin:auto; width:30%; text-align:center;">
             <span th:each="checkboxValue, iterStat : ${allTags}">
                     <input type="checkbox" th:field="*{selectedTags}" th:value="${checkboxValue}"/>
                     <label th:for="${#ids.prev('selectedTags')}" th:text="${checkboxValue}"></label>
                     <br th:if="(${iterStat.index} + 1) % 4 == 0 and !${iterStat.last}">
             </span>
             <br>
-            <input type="text" placeholder="Search string" th:field="*{searchString}" />
-            <button type="submit">OK</button>
+
+            <input type="text" placeholder="Search string" th:field="*{searchString}" class="form-control"/>
+                <button type="submit" class="btn btn-success">OK</button>
+            </div>
         </form>
-        <table>
+        <br>
+        <div class="container">
+        <table class="table table-hover">
             <tr>
                 <th>ID</th>
                 <th>Name</th>
                 <th>Author</th>
                 <th>Tags</th>
                 <th>Quantity</th>
+                <th>Order</th>
+                <th>Edit</th>
+                <th>Delete</th>
             </tr>
             <tr th:each="book : ${books}">
                 <td th:text="${book.id}"></td>
@@ -42,5 +59,8 @@
                 <td sec:authorize="hasRole('LIBRARIAN')"><a th:href="@{/books/delete(bookId=${book.id})}">Delete</a></td>
             </tr>
         </table>
+        </div>
     </div>
+</div>
+</body>
 </html>

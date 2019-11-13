@@ -3,22 +3,40 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
-<div layout:fragment="page_content" id="page_content">
-    <form th:action="@{/books/update}" th:object="${book}" method="post">
-        <span th:each="checkboxValue, iterStat : ${allTags}">
-            <input type="checkbox" th:field="*{tags}" th:value="${checkboxValue}"/>
-            <label th:for="${#ids.prev('tags')}" th:text="${checkboxValue}"></label>
-            <br th:if="(${iterStat.index} + 1) % 4 == 0 and !${iterStat.last}">
-        </span>
-        <br>
-        <input type="hidden" th:field="*{id}"/>
-        <input type="text" placeholder="Name" th:field="*{name}"/>
-        <br>
-        <input type="text" placeholder="Author" th:field="*{author}"/>
-        <br>
-        <input type="number" min="0" placeholder="Quantity" th:field="*{quantity}"/>
-        <br>
-        <button type="submit">OK</button>
-    </form>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="jumbotron text-center" >
+    <div layout:fragment="page_content" id="page_content">
+        <form th:action="@{/books/update}" th:object="${book}" method="post">
+            <span th:each="checkboxValue, iterStat : ${allTags}">
+                <input type="checkbox" th:field="*{tags}" th:value="${checkboxValue}"/>
+                <label th:for="${#ids.prev('tags')}" th:text="${checkboxValue}"></label>
+                <br th:if="(${iterStat.index} + 1) % 4 == 0 and !${iterStat.last}">
+            </span>
+            <br>
+            <input type="hidden" th:field="*{id}"/>
+
+            <div class="row d-flex justify-content-center">
+                <table width="30%">
+                    <tr><td><input type="text" class="form-control" placeholder="Name" th:field="*{name}"/></td></tr>
+                    <tr><td><input type="text" class="form-control" placeholder="Author" th:field="*{author}"/></td></tr>
+                    <tr><td><input type="number" class="form-control" min="0" placeholder="Quantity" th:field="*{quantity}"/></td></tr>
+                </table>
+            </div>
+            <!--<input type="text" placeholder="Name" th:field="*{name}"/>
+            <br>
+            <input type="text" placeholder="Author" th:field="*{author}"/>
+            <br>
+            <input type="number" min="0" placeholder="Quantity" th:field="*{quantity}"/>-->
+            <br><br>
+            <button type="submit" class="btn btn-success">OK</button>
+        </form>
+    </div>
 </div>
+</body>
 </html>
