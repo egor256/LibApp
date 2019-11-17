@@ -22,8 +22,14 @@
             <table width="30%">
                 <tr>
                     <td>
-                        <select th:field="*{status}" class="browser-default custom-select">
+                        <!--<select th:field="*{status}" class="browser-default custom-select">
                             <option selected>Please select</option>
+                            <option value="Ordered">Ordered</option>
+                            <option value="Received">Received</option>
+                            <option value="Returned">Returned</option>
+                        </select>-->
+
+                        <select th:field="*{status}" class="browser-default custom-select">
                             <option value="Ordered">Ordered</option>
                             <option value="Received">Received</option>
                             <option value="Returned">Returned</option>
