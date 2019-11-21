@@ -10,26 +10,47 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <style>
+        body{
+          background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+        }
+
+        .jumbotron
+        {
+        background:none;
+        }
+        .navbar-fixed-top{
+            top:0;
+            position:fixed;
+            right:0px;
+            left:0px;
+            }
+</style>
 </head>
 <body>
-<div class="jumbotron text-center" >
-    <div layout:fragment="page_content" id="page_content">
+
+<div layout:fragment="page_content" id="page_content">
+    <div class="jumbotron text-center" >
         <div class="error" th:if="${param.error}">
             Invalid search string: should be 3 or more characters!
         </div>
         <div sec:authorize="hasRole('LIBRARIAN')">
             <a th:href="@{/books/add}">Add new book</a>
         </div>
+        <br>
         <form th:action="@{/books}" th:object="${filter}" method="post" >
-            <div class="container text-center" style="margin:auto; width:30%; text-align:center;">
             <span th:each="checkboxValue, iterStat : ${allTags}">
-                    <input type="checkbox" th:field="*{selectedTags}" th:value="${checkboxValue}"/>
+                    <input type="checkbox" th:field="*{selectedTags}" th:value="${checkboxValue}" />
                     <label th:for="${#ids.prev('selectedTags')}" th:text="${checkboxValue}"></label>
                     <br th:if="(${iterStat.index} + 1) % 4 == 0 and !${iterStat.last}">
             </span>
-            <br>
+            <br><br>
+
+            <div class="container text-center" style="margin:auto; width:30%; text-align:center;">
+
                 <div class="row d-flex justify-content-center">
-                    <table>
+                    <table >
                         <tr>
                             <td width="70%"> <input type="text" placeholder="Search string" th:field="*{searchString}" class="form-control"/></td>
                             <td width="30%"><button type="submit" class="btn btn-success">OK</button></td>
@@ -50,8 +71,7 @@
                 <th>Tags</th>
                 <th>Quantity</th>
                 <th>Order</th>
-                <th>Edit</th>
-                <th>Delete</th>
+                <th sec:authorize="hasRole('LIBRARIAN')">Delete</th>
             </tr>
             <tr th:each="book : ${books}">
                 <td th:text="${book.id}"></td>
