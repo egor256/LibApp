@@ -25,6 +25,15 @@ public class SignupController
         return matcher.find();
     }
 
+    public static boolean isValidPassword(String password)
+    {
+        boolean isAtLeast6 = password.length() >= 6;
+        boolean hasUppercase = !password.equals(password.toLowerCase());
+        boolean hasLowercase = !password.equals(password.toUpperCase());
+        boolean hasSpecial = !password.matches("[A-Za-z0-9 ]*");
+        return isAtLeast6 && hasUppercase && hasLowercase && hasSpecial;
+    }
+
     @GetMapping("/signup")
     public String signup(Model model)
     {
@@ -39,6 +48,10 @@ public class SignupController
         if (!isValidEmail(regInfo.getEmail()))
         {
             return "redirect:/signup?emailerror";
+        }
+        if (!isValidPassword(regInfo.getPassword()))
+        {
+            return "redirect:/signup?pwdinvalid";
         }
         if (!regInfo.getPassword().equals(regInfo.getRepeatPassword()))
         {

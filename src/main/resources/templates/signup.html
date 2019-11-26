@@ -30,6 +30,9 @@
         <div class="error" th:if="${param.error}">
             This username/email is occupied. Please try again.
         </div>
+        <div class="error" th:if="${param.pwdinvalid}">
+            Password should have least 6 characters, including one uppercase, one lowercase and one special character.
+        </div>
         <div class="error" th:if="${param.pwderror}">
             Passwords do not match. Please try again.
         </div>
